@@ -1,0 +1,102 @@
+
+@page "/Post/{id:int?}"
+@model CourseSocialMedia.Pages.PostModel
+
+@{
+ViewData["Title"] = "Post";
+}
+@using Microsoft.AspNetCore.Identity
+@using CourseSocialMedia.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+		<div class="card">
+			<div class="card-body">
+				<div class="container card-text" style="text-align: right;">
+					@Html.DisplayFor(model => model.Post.UserLikes.Count)
+					@if (!SignInManager.IsSignedIn(User) || Model.Post.UserLikes?.FirstOrDefault(p => p.User == Model.CurrentUser) == null)
+					{
+					<a href="/LikePost?id=@Html.DisplayFor(modelItem => Model.Post.Id)">like</a>
+					}
+					else
+					{
+					<a href="/LikePost?id=@Html.DisplayFor(modelItem => Model.Post.Id)">unlike</a>
+					}
+					@if (SignInManager.IsSignedIn(User) && (Model.Post.Uploader == Model.CurrentUser || User.IsInRole("Admin")))
+					{
+					<a href="/DeletePost?id=@Html.DisplayFor(modelItem => Model.Post.Id)">delete</a>
+					}
+				</div>
+				<div class="container card-text">
+					<div class="row">
+						<div class="col">
+							@Html.DisplayFor(model => model.Post.Uploader.Email)
+						</div>
+						<div class="col" style="text-align: right;">
+							@Html.DisplayFor(model => model.Post.CreatedAt)
+						</div>
+					</div>
+				</div>
+				<h5 class="card-title">
+					@Html.DisplayFor(model => model.Post.Title)
+				</h5>
+				<p class="card-text">
+				@Html.DisplayFor(model => model.Post.Body)
+				</p>
+			</div>
+		</div>
+
+		<form method="POST" action="/Comments/Create?id=@Model.Post.Id">
+		<div class="mt-3">
+			<label for="CommentTextArea" class="form-label">Comment:</label>
+			<textarea class="form-control" name="CommentBody" id="CommentTextArea" rows="3"></textarea>
+			<button class="btn btn-primary mt-3" type="submit">Comment</button>
+		</div>
+		@Html.AntiForgeryToken()
+		</form>
+
+		</br>
+
+		<h4>Comments</h4>
+		@if (Model.Post.Comments.Count != 0)
+		{
+		@foreach (Comment comment in Model.Post.Comments)
+		{
+		<div class="card">
+			<div class="card-body">
+				<div class="container card-text" style="text-align: right;">
+					@Html.DisplayFor(model => comment.UserLikes.Count)
+					@if (!SignInManager.IsSignedIn(User) || comment.UserLikes?.FirstOrDefault(p => p.User == Model.CurrentUser) == null)
+					{
+					<a href="/LikePost?id=@Html.DisplayFor(modelItem => comment.Id)">like</a>
+					}
+					else
+					{
+					<a href="/LikePost?id=@Html.DisplayFor(modelItem => comment.Id)">unlike</a>
+					}
+					@if (SignInManager.IsSignedIn(User) && (comment.User == Model.CurrentUser || User.IsInRole("Admin")))
+					{
+					<a href="/DeletePost?id=@Html.DisplayFor(modelItem => comment.Id)">delete</a>
+					}
+				</div>
+				<div class="container card-text">
+					<div class="row">
+						<div class="col">
+							@Html.DisplayFor(model => comment.User.Email)
+						</div>
+						<div class="col" style="text-align: right;">
+							@Html.DisplayFor(model => comment.CreatedAt)
+						</div>
+					</div>
+				</div>
+				<p class="card-text">
+				@Html.DisplayFor(model => comment.Body)
+				</p>
+			</div>
+		</div>
+		}
+		}
+		else
+		{
+		<h5>This post has no comments.</h5>
+		}

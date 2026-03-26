@@ -1,0 +1,57 @@
+
+@page "/Admin/Users/Ban/{id}"
+@model CourseSocialMedia.Pages.Admin.Users.BanModel
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<div class="card" style="width: 50%">
+	<div class="card-body">
+		<h5 class="card-title">
+			@if (!Model.User.IsBanned)
+			{
+			@:Ban
+			}
+			else
+			{
+			@:Unban
+			}
+		</h5>
+		<p class="card-text">Are you sure you want to
+			@if (!Model.User.IsBanned)
+			{
+			@:ban
+			}
+			else
+			{
+			@:unban
+			}
+		user:</p>
+		<p class="card-text">
+		@Html.DisplayFor(model => model.User.Email)
+		</p>
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<form method="POST">
+						<button class="btn btn-danger" type="submit">
+
+			@if (!Model.User.IsBanned)
+			{
+			@:Ban
+			}
+			else
+			{
+			@:Unban
+			}
+						</button>
+					</form>
+				</div>
+				<div class="col">
+					<a class="btn btn-outline-danger" href="/Admin/Users/Index">Cancel</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

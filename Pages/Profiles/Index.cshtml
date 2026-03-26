@@ -1,0 +1,74 @@
+
+@page "/Profiles/{int?}"
+@model CourseSocialMedia.Pages.Profiles.IndexModel
+
+@{
+ViewData["Title"] = "Profile";
+}
+@using Microsoft.AspNetCore.Identity
+@using CourseSocialMedia.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+
+
+<div class="card">
+	<div class="card-body">
+		<h4 class="card-title">
+			@if (Model.Profile.DisplayName != null)
+			{
+			@Model.Profile.DisplayName
+			}
+			else
+			{
+			@Model.Profile.Email
+			}
+		</h4>
+		<h5 class="card-text">
+			@Model.Profile.Email
+		</h5>
+		@if (Model.Profile == Model.CurrentUser)
+		{
+		<a class="btn btn-primary" href="/Posts/Create">New Post</a>
+		}
+	</div>
+</div>
+@foreach (Post post in Model.Posts)
+{
+		<div class="card">
+			<div class="card-body">
+				<div class="container card-text" style="text-align: right;">
+					@Html.DisplayFor(modelItem => post.UserLikes.Count)
+					@if (!SignInManager.IsSignedIn(User) || post.UserLikes?.FirstOrDefault(p => p.User == Model.CurrentUser) == null)
+					{
+					<a href="/LikePost?id=@Html.DisplayFor(modelItem => post.Id)">like</a>
+					}
+					else
+					{
+					<a href="/LikePost?id=@Html.DisplayFor(modelItem => post.Id)">unlike</a>
+					}
+					<a href="/Post?id=@post.Id">comment</a>
+					@if (SignInManager.IsSignedIn(User) && (post.Uploader == Model.CurrentUser || User.IsInRole("Admin")))
+					{
+					<a href="/DeletePost?id=@Html.DisplayFor(modelItem => post.Id)">delete</a>
+					}
+				</div>
+				<div class="container card-text">
+					<div class="row">
+						<div class="col">
+							@Html.DisplayFor(modelItem => post.Uploader.Email)
+						</div>
+						<div class="col" style="text-align: right;">
+							@Html.DisplayFor(modelItem => post.CreatedAt)
+						</div>
+					</div>
+				</div>
+				<h5 class="card-title">
+					@Html.DisplayFor(modelItem => post.Title)
+				</h5>
+				<p class="card-text">
+				@Html.DisplayFor(modelItem => post.Body)
+				</p>
+			</div>
+		</div>
+}
