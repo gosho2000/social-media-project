@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CourseSocialMedia")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e12162efcf29e3b1648348e87b9faafa2361b6bd")]
 [assembly: System.Reflection.AssemblyProductAttribute("CourseSocialMedia")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CourseSocialMedia")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
