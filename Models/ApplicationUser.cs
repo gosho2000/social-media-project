@@ -8,10 +8,6 @@ namespace CourseSocialMedia.Models;
 public class ApplicationUser : IdentityUser
 {
 	public string? DisplayName { get; set; }
-
-	// public string? RoleId { get; set; }
-	//
-	// public IdentityRole? Role { get; set; }
 	
 	public bool IsBanned { get; set; } = false;
 
