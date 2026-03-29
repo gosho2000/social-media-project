@@ -101,6 +101,11 @@ public class LikePost: PageModel
 
 			ApplicationUser? user = await _userManager.GetUserAsync(User);
 
+			if (user == null)
+			{
+				return RedirectToPage("/Account/Login", new { area = "Identity" });
+			}
+
 			if (comment.UserLikes?.FirstOrDefault(u => u.User == user) == null)
 			{
 				CommentLike commentLike = new CommentLike()
