@@ -25,6 +25,8 @@ public class PostModel: PageModel
 
 	public Post Post { get; set; }
 
+	public ICollection<Comment> Comments { get; set; }
+
 	public ApplicationUser CurrentUser { get; set; }
 
 	public PostModel(UserManager<ApplicationUser> userManager, CourseSocialMedia.Data.ApplicationDbContext context)
@@ -37,6 +39,8 @@ public class PostModel: PageModel
 	public async Task<IActionResult> OnGetAsync(int id)
 	{
 		Post = _context.Posts.Include(p => p.Uploader).Include(p => p.UserLikes).Include(p => p.Comments).FirstOrDefault(p => p.Id == id);
+
+		Comments = await _context.Comments.Where(p => p.Post == Post).Include(p => p.UserLikes).Include(p => p.User).ToListAsync();
 
 		CurrentUser = await _userManager.GetUserAsync(User);
 

@@ -60,7 +60,7 @@ ViewData["Title"] = "Post";
 		<h4>Comments</h4>
 		@if (Model.Post.Comments.Count != 0)
 		{
-		@foreach (Comment comment in Model.Post.Comments)
+		@foreach (Comment comment in Model.Comments)
 		{
 		<div class="card">
 			<div class="card-body">
@@ -68,11 +68,11 @@ ViewData["Title"] = "Post";
 					@Html.DisplayFor(model => comment.UserLikes.Count)
 					@if (!SignInManager.IsSignedIn(User) || comment.UserLikes?.FirstOrDefault(p => p.User == Model.CurrentUser) == null)
 					{
-					<a href="/LikePost?id=@Html.DisplayFor(modelItem => comment.Id)">like</a>
+					<a href="/LikePost?id=@Html.DisplayFor(modelItem => comment.Id)&isComment=true">like</a>
 					}
 					else
 					{
-					<a href="/LikePost?id=@Html.DisplayFor(modelItem => comment.Id)">unlike</a>
+					<a href="/LikePost?id=@Html.DisplayFor(modelItem => comment.Id)&isComment=true">unlike</a>
 					}
 					@if (SignInManager.IsSignedIn(User) && (comment.User == Model.CurrentUser || User.IsInRole("Admin")))
 					{
@@ -82,10 +82,10 @@ ViewData["Title"] = "Post";
 				<div class="container card-text">
 					<div class="row">
 						<div class="col">
-							@Html.DisplayFor(model => comment.User.Email)
+							@Html.DisplayFor(modelItem => comment.User.Email)
 						</div>
 						<div class="col" style="text-align: right;">
-							@Html.DisplayFor(model => comment.CreatedAt)
+							@Html.DisplayFor(modelItem => comment.CreatedAt)
 						</div>
 					</div>
 				</div>

@@ -33,9 +33,14 @@ public class LikePost: PageModel
 		_roleMaanger = roleManager;
 	}
 
-	public async Task<IActionResult> OnGetAsync(int? id)
+	public async Task<IActionResult> OnGetAsync(int? id, bool? isComment = false)
 	{
 		// Console.WriteLine(id);
+
+		if (isComment == false)
+		{
+
+		
 
 		Post? post = _context.Posts.Include(p => p.UserLikes).FirstOrDefault(p => p.Id == id);
 
@@ -82,6 +87,54 @@ public class LikePost: PageModel
 			await _context.SaveChangesAsync();
 
 			return RedirectToPage("Index");
+		}
+
+		}
+		else
+		{
+			Comment? comment = _context.Comments.Include(p => p.UserLikes).FirstOrDefault(p => p.Id == id);
+
+			if (comment == null)
+			{
+				return StatusCode(404);
+			}
+
+			ApplicationUser? user = await _userManager.GetUserAsync(User);
+
+			if (comment.UserLikes?.FirstOrDefault(u => u.User == user) == null)
+			{
+				CommentLike commentLike = new CommentLike()
+				{
+					User = user,
+					Comment = comment
+				};
+
+				_context.Add(commentLike);
+
+				comment.UserLikes.Add(commentLike);
+
+				user.LikedComments.Add(commentLike);
+
+				_context.Update(comment);
+
+				_context.Update(user);
+
+				await _context.SaveChangesAsync();
+
+				return RedirectToPage("Index");
+		}
+		else
+		{
+			CommentLike commentLike = comment.UserLikes?.FirstOrDefault(u => u.User == user);
+
+			_context.Remove(commentLike);
+
+			await _context.SaveChangesAsync();
+
+			return RedirectToPage("Index");
+		}
+
+
 		}
 
 		return RedirectToPage("Index");
